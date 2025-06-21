@@ -58,12 +58,7 @@ It’s a central hub for recruiters, collaborators, and fellow developers to con
 ├── tsconfig.json
 └── package.json
 ```
-
 ---
-
-## 📸 Preview
-
-> 🖼️ *Add a screenshot named `preview.png` in your repo for this image to show below!*
 
 ![Portfolio Preview](https://raw.githubusercontent.com/UmarIqbal000/your-repo-name/main/preview.png)
 

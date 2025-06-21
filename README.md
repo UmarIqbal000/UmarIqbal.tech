@@ -60,10 +60,6 @@ It’s a central hub for recruiters, collaborators, and fellow developers to con
 ```
 ---
 
-![Portfolio Preview](https://raw.githubusercontent.com/UmarIqbal000/your-repo-name/main/preview.png)
-
----
-
 ## 🔗 Important Links
 
 - 🧑‍💻 **GitHub:** [github.com/UmarIqbal000](https://github.com/UmarIqbal000)

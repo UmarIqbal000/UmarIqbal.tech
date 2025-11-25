@@ -4,6 +4,7 @@ import { Github, Linkedin, Mail, Phone, Menu, X } from 'lucide-react';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [displayText, setDisplayText] = useState('');
   
   const titles = [
@@ -14,6 +15,14 @@ const Header: React.FC = () => {
   ];
   
   const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const currentTitle = titles[currentTitleIndex];
@@ -42,53 +51,60 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <header className="relative min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
+    <header className="relative min-h-screen flex flex-col justify-center overflow-hidden">
       {/* Navigation */}
-      <nav className="relative z-50 flex items-center justify-between p-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="text-2xl font-bold text-primary-400"
-        >
-          UI
-        </motion.div>
-
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-8">
-          {navigationItems.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className="text-gray-300 hover:text-primary-400 transition-colors duration-200"
-            >
-              {item.name}
-            </a>
-          ))}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden">
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 text-gray-300"
+      <nav 
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled ? 'glass-panel py-4' : 'bg-transparent py-6'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="text-2xl font-bold font-heading text-white"
           >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+            UI<span className="text-neon-cyan">.</span>
+          </motion.div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navigationItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="text-gray-300 hover:text-neon-cyan transition-colors duration-200 text-sm uppercase tracking-wider font-medium"
+              >
+                {item.name}
+              </a>
+            ))}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 text-gray-300 hover:text-white"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="absolute top-full left-0 right-0 bg-gray-900 shadow-lg md:hidden"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden glass-panel border-t border-white/10"
           >
             <div className="px-6 py-4 space-y-4">
               {navigationItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="block text-gray-300 hover:text-primary-400 transition-colors duration-200"
+                  className="block text-gray-300 hover:text-neon-cyan transition-colors duration-200"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
@@ -100,35 +116,36 @@ const Header: React.FC = () => {
       </nav>
 
       {/* Hero Content */}
-      <div className="relative z-10 flex items-center justify-center min-h-[calc(100vh-80px)] px-6">
-        <div className="max-w-4xl mx-auto text-center">
+      <div className="relative z-10 px-6 max-w-7xl mx-auto w-full">
+        <div className="max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
-              Umar <span className="text-primary-400">Iqbal</span>
+            <h2 className="text-neon-cyan font-medium tracking-wider mb-4 uppercase">Welcome to my portfolio</h2>
+            <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 font-heading leading-tight">
+              Umar <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-electric-purple">Iqbal</span>
             </h1>
             
-            <div className="h-16 mb-8">
-              <h2 className="text-xl md:text-2xl text-gray-300 font-medium">
+            <div className="h-12 mb-8 flex items-center">
+              <div className="w-1 h-8 bg-neon-cyan mr-4 animate-pulse"></div>
+              <h2 className="text-xl md:text-3xl text-gray-300 font-light">
                 {displayText}
-                <span className="animate-pulse">|</span>
               </h2>
             </div>
 
-            <p className="text-lg md:text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-gray-400 mb-12 max-w-2xl leading-relaxed">
               B.Tech CSE student passionate about AI, Python, and Cloud Computing. 
-              Currently upskilling through Harvard and Stanford courses and building real-world tech projects.
+              Crafting digital experiences with modern technologies and creative design.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-6 mb-12">
+            <div className="flex flex-wrap gap-6 mb-12">
               <motion.a
                 href="mailto:umariq.cse@gmail.com"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-3 bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-full font-medium transition-colors duration-200"
+                className="flex items-center gap-3 bg-neon-cyan/10 border border-neon-cyan text-neon-cyan px-8 py-4 rounded-full font-medium hover:bg-neon-cyan hover:text-black transition-all duration-300"
               >
                 <Mail size={20} />
                 Get In Touch
@@ -140,59 +157,59 @@ const Header: React.FC = () => {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-3 bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full font-medium transition-colors duration-200"
+                className="flex items-center gap-3 glass-panel text-white px-8 py-4 rounded-full font-medium hover:bg-white/10 transition-all duration-300"
               >
                 <Github size={20} />
                 View Work
               </motion.a>
             </div>
 
-            <div className="flex justify-center space-x-6">
-              <motion.a
-                href="mailto:umariq.cse@gmail.com"
-                whileHover={{ scale: 1.1 }}
-                className="p-3 bg-gray-800 rounded-full shadow-md hover:shadow-lg transition-shadow duration-200"
-              >
-                <Mail size={24} className="text-gray-300" />
-              </motion.a>
-              
-              <motion.a
-                href="tel:+917906732247"
-                whileHover={{ scale: 1.1 }}
-                className="p-3 bg-gray-800 rounded-full shadow-md hover:shadow-lg transition-shadow duration-200"
-              >
-                <Phone size={24} className="text-gray-300" />
-              </motion.a>
-              
-              <motion.a
-                href="https://github.com/UmarIqbal000"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                className="p-3 bg-gray-800 rounded-full shadow-md hover:shadow-lg transition-shadow duration-200"
-              >
-                <Github size={24} className="text-gray-300" />
-              </motion.a>
-              
-              <motion.a
-                href="https://www.linkedin.com/in/umariqbal000/"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1 }}
-                className="p-3 bg-gray-800 rounded-full shadow-md hover:shadow-lg transition-shadow duration-200"
-              >
-                <Linkedin size={24} className="text-gray-300" />
-              </motion.a>
+            <div className="flex items-center gap-6">
+              <div className="h-px w-12 bg-gray-700"></div>
+              <div className="flex space-x-6">
+                <motion.a
+                  href="https://github.com/UmarIqbal000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ y: -5, color: '#06b6d4' }}
+                  className="text-gray-400 transition-colors"
+                >
+                  <Github size={24} />
+                </motion.a>
+                
+                <motion.a
+                  href="https://www.linkedin.com/in/umariqbal000/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ y: -5, color: '#06b6d4' }}
+                  className="text-gray-400 transition-colors"
+                >
+                  <Linkedin size={24} />
+                </motion.a>
+
+                <motion.a
+                  href="mailto:umariq.cse@gmail.com"
+                  whileHover={{ y: -5, color: '#06b6d4' }}
+                  className="text-gray-400 transition-colors"
+                >
+                  <Mail size={24} />
+                </motion.a>
+              </div>
             </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-900 rounded-full opacity-20 animate-bounce-gentle"></div>
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-secondary-900 rounded-full opacity-20 animate-bounce-gentle" style={{ animationDelay: '1s' }}></div>
-      </div>
+      {/* Scroll Indicator */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 1 }}
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2"
+      >
+        <span className="text-xs uppercase tracking-widest text-gray-500">Scroll</span>
+        <div className="w-[1px] h-12 bg-gradient-to-b from-neon-cyan to-transparent"></div>
+      </motion.div>
     </header>
   );
 };
